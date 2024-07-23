@@ -1,71 +1,65 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Compression;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
 
+    [Header("Movement")]
+
     private CharacterController controller;
 
     public float speed  = 12f;
-    public float gravity = -9.81f *2;
-    public float jumpHeight = 3f;
-
-    public Transform groundCheck;
-    public float groundDistance = .4f;
-    public LayerMask groundMask;
-    
-    Vector3 velocity;
-
-    bool isGrounded;
-    bool isMoving;
-
-    private Vector3 lastPosition = new Vector3(0f,0f,0f);
+    public Transform orientation;
+    float horizontalInput;
+    float verticalInput;
+    public float drag;
+    Vector3 moveDirection;
+    Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
     }
+
+    
 
     // Update is called once per frame
     void Update()
     {
-        // ground check
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        // Reseting the default velocity
-        if (isGrounded && velocity.y < 0){
-            velocity.y = -2f;
+        MyInput();
+        SpeedControl();
+        rb.drag = drag;
+    }
+
+    private void FixedUpdate(){
+        MovePlayer();
+    }
+
+    private void MyInput(){
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+
+    }
+
+    private void MovePlayer(){
+        // calc movement
+        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        rb.AddForce(moveDirection.normalized * speed * 10f, ForceMode.Force);
+
+    }
+
+    private void SpeedControl(){
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+        if(flatVel.magnitude > speed){
+            Vector3 limitedVel = flatVel.normalized * speed;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
-
-        // Get inputs
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        Vector3 move = transform.right * x + transform.forward * z;
-
-        // move the character
-        controller.Move(move * speed * Time.deltaTime);
-
-        // check if jump
-        if (Input.GetButtonDown("Jump") && isGrounded){
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
-        // Falling down
-        velocity.y += gravity * Time.deltaTime;
-
-        // Execute the jump
-        controller.Move(velocity * Time.deltaTime);
-
-        // For later use
-        if (lastPosition != gameObject.transform.position && isGrounded == true){
-            isMoving = true;
-        } else {
-            isMoving = false;
-        }
-
-        lastPosition = gameObject.transform.position;
     }
 }

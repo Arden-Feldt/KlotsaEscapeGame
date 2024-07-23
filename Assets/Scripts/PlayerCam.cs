@@ -8,6 +8,7 @@ public class MouseMovement : MonoBehaviour
     float xRotation =  0f;
     float yRotation = 0f;
 
+    public Transform orientation;
     public float topClamp = -90f;
     public float bottomClamp = 90f;
 
@@ -16,26 +17,27 @@ public class MouseMovement : MonoBehaviour
     {
         // lock cursor to middle of screen and make invis
         Cursor.lockState = CursorLockMode.Locked;
-        
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         // gettting mouse inputs
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxisRaw("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         // Rotaition aroud the x axis (look up and down)
         xRotation -= mouseY;
 
-        // Clamp Rotaion
-        xRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
-
         // Rotation left and right
         yRotation += mouseX;
 
+        // Clamp Rotaion
+        xRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
+
         // Apply rotations to our transform
-        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 }
