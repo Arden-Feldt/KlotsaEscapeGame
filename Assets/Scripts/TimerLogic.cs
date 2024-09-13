@@ -8,6 +8,7 @@ public class TimerLogic : MonoBehaviour
     public float time;
     private float startTime;
     public Text timeText;
+    public bool endState;
 
     
     // Start is called before the first frame update
@@ -15,12 +16,15 @@ public class TimerLogic : MonoBehaviour
     {
         time = 0f;
         startTime = Time.time;
+        endState = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        time = Time.time - startTime;
-        timeText.text = time.ToString("F2");
+        if (endState){
+            time = Time.time - startTime;
+            timeText.text = time.ToString("F2");
+        }
     }
 }
