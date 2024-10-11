@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   escapee: {fileID: 712260847045156667}
   pylon: {fileID: 0}
-  speed: 0.05
+  speed: 0.1
 --- !u!1 &7270000361621499925
 GameObject:
   m_ObjectHideFlags: 0

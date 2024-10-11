@@ -11,13 +11,13 @@ public class AssignPylon : MonoBehaviour
     void Start()
     {
         // Find all EscapeePrefabs in the scene
-        EscapeePrefab[] escapees = FindObjectsOfType<EscapeePrefab>();
+        //EscapeePrefab[] escapees = FindObjectsOfType<EscapeePrefab>();
 
         // Loop through each EscapeePrefab and assign the Pylon
-        foreach (EscapeePrefab escapee in escapees)
-        {
-            escapee.Pylon = pylon;
-        }
+        //foreach (EscapeePrefab escapee in escapees)
+        //{
+        //    escapee.Pylon = pylon;
+        //}
     }
 
     // Update is called once per frame
