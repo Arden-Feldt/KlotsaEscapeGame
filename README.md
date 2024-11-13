@@ -1,2 +1,2 @@
 ## Dependencies:
-Package Manger: AI Navigation
+Package Manager: AI Navigation
